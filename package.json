@@ -1,0 +1,86 @@
+{
+  "name": "@adludio/geometry",
+  "version": "1.0.0",
+  "description": "2D point and geometry math",
+  "main": "index.js",
+  "scripts": {
+    "compile": "babel src --out-dir .",
+    "prepublish": "npm run compile",
+    "lint": "eslint src test",
+    "test": "mocha --compilers js:babel/register",
+    "watch-test": "mocha --compilers js:babel/register -w",
+    "check": "npm run lint && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/futureadlabs/geometry.git"
+  },
+  "author": "Adludio Ltd",
+  "license": "Apache-2.0+",
+  "bugs": {
+    "url": "https://github.com/futureadlabs/geometry/issues"
+  },
+  "homepage": "https://github.com/futureadlabs/geometry#readme",
+  "devDependencies": {
+    "babel": "^5.8.21",
+    "babel-eslint": "^4.0.5",
+    "eslint": "^1.1.0",
+    "file-loader": "^0.8.1",
+    "mocha": "^2.1.0",
+    "webpack": "^1.6.0",
+    "webpack-dev-server": "^1.7.0"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "rules": {
+      "no-undef": 0,
+      "no-shadow": 0,
+      "no-use-before-define": 0,
+      "strict": 0,
+      "no-inner-declarations": 0,
+      "no-unused-vars": 0,
+      "new-cap": 0,
+      "no-underscore-dangle": 0,
+      "no-var": 2,
+      "indent": [
+        2,
+        2
+      ],
+      "brace-style": [
+        1,
+        "1tbs",
+        {
+          "allowSingleLine": true
+        }
+      ],
+      "comma-style": [
+        2,
+        "last"
+      ],
+      "eol-last": 2,
+      "no-lonely-if": 2,
+      "quotes": [
+        2,
+        "double"
+      ],
+      "space-after-keywords": 2,
+      "space-before-blocks": 1,
+      "space-before-function-parentheses": [
+        2,
+        "never"
+      ],
+      "space-in-parens": [
+        2,
+        "never"
+      ],
+      "spaced-line-comment": 2
+    },
+    "globals": {
+      "super": true
+    }
+  }
+}

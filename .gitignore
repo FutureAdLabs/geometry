@@ -1,0 +1,6 @@
+.tern-port
+/node_modules/
+/anchor.js
+/matrix.js
+/point.js
+/transform.js
