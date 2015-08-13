@@ -21,6 +21,12 @@
     "url": "https://github.com/futureadlabs/geometry/issues"
   },
   "homepage": "https://github.com/futureadlabs/geometry#readme",
+  "files": [
+    "anchor.js",
+    "matrix.js",
+    "point.js",
+    "transform.js"
+  ],
   "devDependencies": {
     "babel": "^5.8.21",
     "babel-eslint": "^4.0.5",
