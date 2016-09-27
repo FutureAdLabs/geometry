@@ -52,33 +52,41 @@ export function rotateAroundPoint(a: Point, angle: number): Transform {
   return transform(p(0, 0), withA(a, angle), u(p(1, 1)), 1);
 }
 
-function noScaleToZero(x, y) {
-  if (x === 0) {
-    throw new Error(`Division by zero! You're trying to scale to a ratio of x=${x} y=${y}`);
+function ensureNoScaleToZero(x, y) {
+  let result = {
+    x: x,
+    y: y
   }
-  if (y === 0) {
-    throw new Error(`Division by zero! You're trying to scale to a ratio of x=${x} y=${y}`);
+
+  if(x === 0) {
+    result.x = 0.001;
   }
+
+  if(y === 0) {
+    result.y = 0.001;
+  }
+
+  return result;
 }
 
 export function scale(x: number, y: number): Transform {
-  noScaleToZero(x, y);
-  return transform(p(0, 0), u(0), u(p(x, y)), 1);
+  let result = ensureNoScaleToZero(x, y);
+  return transform(p(0, 0), u(0), u(p(result.x, result.y)), 1);
 }
 
 export function scalePoint(s: Point): Transform {
-  noScaleToZero(s.x, s.y);
-  return transform(p(0, 0), u(0), u(s), 1);
+  let result = ensureNoScaleToZero(s.x, s.y);
+  return transform(p(0, 0), u(0), u(p(result.x, result.y)), 1);
 }
 
 export function scaleAround(x: number, y: number, sx: number, sy: number): Transform {
-  noScaleToZero(sx, sy);
-  return transform(p(0, 0), u(0), withA(p(x, y), p(sx, sy)), 1);
+  let result = ensureNoScaleToZero(sx, sy);
+  return transform(p(0, 0), u(0), withA(p(x, y), p(result.x, result.y)), 1);
 }
 
 export function scaleAroundPoint(a: Point, s: Point): Transform {
-  noScaleToZero(s.x, s.y);
-  return transform(p(0, 0), u(0), withA(a, s), 1);
+  let result = ensureNoScaleToZero(s.x, s.y);
+  return transform(p(0, 0), u(0), withA(a, p(result.x, result.y)), 1);
 }
 
 export function opacity(o: number): Transform {
