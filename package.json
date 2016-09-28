@@ -1,6 +1,6 @@
 {
   "name": "@adludio/geometry",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "2D point and geometry math",
   "main": "index.js",
   "scripts": {
