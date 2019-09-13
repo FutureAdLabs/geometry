@@ -117,18 +117,3 @@ export function intersectsBounds(b1: Bounds, b2: Bounds): boolean {
     || pointInBounds(b2, bc(b1))
     || pointInBounds(b2, bd(b1)));
 }
-
-export function doesRectIntersect(r1: Bounds, r2: Bounds): boolean {
-  const { x: left1, y: top1 } = ba(r1)
-  const { x: right1, y: bottom1 } = bc(r1)
-  
-  const { x: left2, y: top2 } = ba(r2)
-  const { x: right2, y: bottom2 } = bc(r2)
-
-  return !(
-    left2 > right1 ||
-    right2 < left1 ||
-    top2 > bottom1 ||
-    bottom2 < top1
-  )
-}
