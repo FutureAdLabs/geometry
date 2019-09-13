@@ -4,7 +4,8 @@
   "description": "2D point and geometry math",
   "scripts": {
     "prepublishOnly": "npm run test && npm run build",
-    "build": "rm -rf ./dist && tsc",
+    "build": "rm -rf ./lib && tsc && npm run generate-flow-defs",
+    "generate-flow-defs": "flowgen --add-flow-header lib/ && copyfiles -u 1 -V 'exports/*.flow' lib && rm -rf exports",
     "test:cover": "nyc --reporter=lcov --reporter=text mocha test/* --require ts-node/register --exit",
     "test:ci": "nyc mocha test/* --require ts-node/register  --reporter mocha-junit-reporter --exit --reporter-options mochaFile=reports/test-results.xml",
     "test": "mocha test/* --require ts-node/register --exit",
@@ -22,10 +23,7 @@
   },
   "homepage": "https://github.com/futureadlabs/geometry#readme",
   "files": [
-    "anchor.js",
-    "matrix.js",
-    "point.js",
-    "transform.js"
+    "lib"
   ],
   "devDependencies": {
     "@babel/cli": "^7.6.0",
@@ -37,7 +35,9 @@
     "@types/sinon-chai": "^3.2.3",
     "babel-eslint": "^10.0.3",
     "chai": "^4.2.0",
+    "copyfiles": "^2.1.1",
     "eslint": "^6.3.0",
+    "flowgen": "^1.10.0",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
     "sinon": "^7.4.2",
