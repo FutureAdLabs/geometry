@@ -3,3 +3,5 @@
 lib
 exports
 .DS_Store
+.nyc_output
+coverage
