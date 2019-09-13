@@ -2,14 +2,14 @@
   "name": "@adludio/geometry",
   "version": "1.1.0",
   "description": "2D point and geometry math",
-  "main": "index.js",
   "scripts": {
-    "compile": "babel src --out-dir .",
-    "prepublish": "npm run compile",
-    "lint": "eslint src test",
-    "test": "mocha --compilers js:babel/register",
-    "watch-test": "mocha --compilers js:babel/register -w",
-    "check": "npm run lint && npm test"
+    "prepublishOnly": "npm run test && npm run build",
+    "build": "rm -rf ./dist && tsc",
+    "test:cover": "nyc --reporter=lcov --reporter=text mocha test/* --require ts-node/register --exit",
+    "test:ci": "nyc mocha test/* --require ts-node/register  --reporter mocha-junit-reporter --exit --reporter-options mochaFile=reports/test-results.xml",
+    "test": "mocha test/* --require ts-node/register --exit",
+    "test:lint": "eslint src",
+    "report": "nyc report --reporter=lcov --reporter=text"
   },
   "repository": {
     "type": "git",
@@ -28,13 +28,22 @@
     "transform.js"
   ],
   "devDependencies": {
-    "babel": "^5.8.21",
-    "babel-eslint": "^4.0.5",
-    "eslint": "^1.1.0",
-    "file-loader": "^0.8.1",
-    "mocha": "^2.1.0",
-    "webpack": "^1.6.0",
-    "webpack-dev-server": "^1.7.0"
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@types/chai": "^4.2.2",
+    "@types/mocha": "^5.2.7",
+    "@types/sinon": "^7.0.13",
+    "@types/sinon-chai": "^3.2.3",
+    "babel-eslint": "^10.0.3",
+    "chai": "^4.2.0",
+    "eslint": "^6.3.0",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
+    "sinon": "^7.4.2",
+    "sinon-chai": "^3.3.0",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.6.3"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
