@@ -1,9 +1,6 @@
-/*global describe, it */
-
-import assert from "assert";
-
 import * as t from "../src/matrix";
 import * as g from "../src/point";
+import { assert } from "chai";
 
 function genNum() {
   return (Math.random() * 10000) - 5000;
@@ -50,7 +47,7 @@ function check(desc, fn) {
   });
 }
 
-describe("matrix", () => {
+describe("Matrix", () => {
   check("can be successfully compared to itself", () => {
     const a = genT();
     eqT(a, a);
