@@ -16,7 +16,11 @@ export function unit<A>(value: A): Anchored<A> {
 }
 
 export function eqAnchor<A>(a: Anchored<A>, b: Anchored<A>): boolean {
-  return p.eqPoint(a.anchor, b.anchor) && (p.isPoint(a.value) && p.isPoint(b.value) ? p.eqPoint(a.value, b.value) : a.value === b.value)
+  return p.eqPoint(a.anchor, b.anchor) &&  // Anchors are always points, comparing them
+  (p.isPoint(a.value) && p.isPoint(b.value) // If they are the same, check if value is point
+    ? p.eqPoint(a.value, b.value) : // If value is point -> Check if they are equal
+    a.value === b.value // Otherwise just do simple comparison
+  );
 }
 
 export function lift<A>(fn: (a: A) => A): (a: Anchored<A>) => Anchored<A> {
