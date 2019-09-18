@@ -6,7 +6,7 @@
     "prepublishOnly": "npm run test",
     "prepare": "npm run build",
     "build": "npm run cleanup && babel src --out-dir . --extensions '.ts' --source-maps inline && tsc --emitDeclarationOnly && npm run generate-flow-defs",
-    "cleanup": "rimraf ./*.js ./*.d.ts",
+    "cleanup": "rimraf ./*.js ./*.d.ts ./*.js.flow",
     "generate-flow-defs": "flowgen --add-flow-header ./ && copyfiles -u 1 -V 'exports/*.flow' ./",
     "test:cover": "nyc --reporter=lcov --reporter=text mocha test/* --require ts-node/register --exit",
     "test:ci": "nyc mocha test/* --require ts-node/register  --reporter mocha-junit-reporter --exit --reporter-options mochaFile=reports/test-results.xml",
