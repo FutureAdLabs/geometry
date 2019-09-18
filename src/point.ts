@@ -108,12 +108,16 @@ export function containsBounds(b1: Bounds, b2: Bounds): boolean {
 
 
 export function intersectsBounds(b1: Bounds, b2: Bounds): boolean {
-  return (pointInBounds(b1, ba(b2))
-    || pointInBounds(b1, bb(b2))
-    || pointInBounds(b1, bc(b2))
-    || pointInBounds(b1, bd(b2))
-    || pointInBounds(b2, ba(b1))
-    || pointInBounds(b2, bb(b1))
-    || pointInBounds(b2, bc(b1))
-    || pointInBounds(b2, bd(b1)));
+  const { x: left1, y: top1 } = ba(b1)
+  const { x: right1, y: bottom1 } = bc(b1)
+
+  const { x: left2, y: top2 } = ba(b2)
+  const { x: right2, y: bottom2 } = bc(b2)
+
+  return !(
+    left2 > right1 ||
+    right2 < left1 ||
+    top2 > bottom1 ||
+    bottom2 < top1
+  )
 }
