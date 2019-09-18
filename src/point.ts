@@ -1,28 +1,43 @@
-/* @flow -*- mode: flow -*- */
+import { eqNum } from "./util/number"
 
-type Point = {
+export interface Point {
   x: number;
   y: number;
 };
 
+
 export function point(x: number, y: number): Point {
-  return { x: x, y: y };
+  return { x, y };
 }
 
-export function addPoints(a: Point, b: Point): Point {
-  return { x: a.x + b.x, y: a.y + b.y };
+// DuckTyped
+export function isPoint(p: any): p is Point {
+  return !!p && typeof p.x === "number" && typeof p.y === "number" && Object.keys(p).length === 2
 }
 
-export function subPoints(a: Point, b: Point): Point {
-  return { x: a.x - b.x, y: a.y - b.y };
+export function addPoints(a: Point, b: Point | number): Point {
+  b = typeof b === "number" ? point(b, b) : b
+  return point(a.x + b.x, a.y + b.y)
 }
 
-export function mulPoints(a: Point, b: Point): Point {
-  return { x: a.x * b.x, y: a.y * b.y };
+export function subPoints(a: Point, b: Point | number): Point {
+  b = typeof b === "number" ? point(b, b) : b
+  return point(a.x - b.x, a.y - b.y)
 }
 
-export function divPoint(a: Point, b: number): Point {
-  return { x: a.x / b, y: a.y / b };
+export function mulPoints(a: Point, b: Point | number): Point {
+  b = typeof b === "number" ? point(b, b) : b
+  return point(a.x * b.x, a.y * b.y)
+}
+
+export function divPoint(a: Point, b: Point | number): Point {
+  b = typeof b === "number" ? point(b, b) : b
+  return point(a.x / b.x, a.y / b.y)
+}
+
+
+export function eqPoint(a: Point, b: Point): boolean {
+  return eqNum(a.x, b.x) && eqNum(a.y, b.y)
 }
 
 // Bounds are represented by three points A, B and D such that:
@@ -30,7 +45,8 @@ export function divPoint(a: Point, b: number): Point {
 //     |   |
 //     D---C
 // Given that bounds are always rectangles, the missing point C can be inferred.
-type Bounds = {
+
+interface Bounds {
   ax: number; ay: number;
   bx: number; by: number;
   dx: number; dy: number;
@@ -40,6 +56,12 @@ export function boundsFor(a: Point, b: Point, d: Point): Bounds {
   return { ax: a.x, ay: a.y, bx: b.x, by: b.y, dx: d.x, dy: d.y };
 }
 
+//
+// This short suite of functions
+// exist to extract the outer point represented
+// by bounds 
+//
+
 function ba(b: Bounds): Point {
   return point(b.ax, b.ay);
 }
@@ -48,7 +70,7 @@ function bb(b: Bounds): Point {
   return point(b.bx, b.by);
 }
 
-function bc(b: Bounds): Point {
+export function bc(b: Bounds): Point {
   return point(b.dx + (b.bx - b.ax), b.dy + (b.by - b.ay));
 }
 
@@ -56,7 +78,7 @@ function bd(b: Bounds): Point {
   return point(b.dx, b.dy);
 }
 
-function axisAligned(b: Bounds): boolean {
+export function axisAligned(b: Bounds): boolean {
   return b.ax === b.dx && b.ay === b.by;
 }
 
@@ -79,29 +101,23 @@ export function pointInBounds(b: Bounds, p: Point): boolean {
 // Test whether b2 is completely contained by b1
 export function containsBounds(b1: Bounds, b2: Bounds): boolean {
   return (pointInBounds(b1, ba(b2))
-          && pointInBounds(b1, bb(b2))
-          && pointInBounds(b1, bc(b2))
-          && pointInBounds(b1, bd(b2)));
+    && pointInBounds(b1, bb(b2))
+    && pointInBounds(b1, bc(b2))
+    && pointInBounds(b1, bd(b2)));
 }
 
-// Test whether b1 and b2 intersect
-// FIXME algorithm below does not account for this case:
-//     +--+
-//     |  |
-//  +--+--+--+
-//  |  |  |  |
-//  +--+--+--+
-//     |  |
-//     +--+
-// Proper algorithm should test for whether any of the bounds'
-// component lines intersect with each other.
+
 export function intersectsBounds(b1: Bounds, b2: Bounds): boolean {
-  return (pointInBounds(b1, ba(b2))
-          || pointInBounds(b1, bb(b2))
-          || pointInBounds(b1, bc(b2))
-          || pointInBounds(b1, bd(b2))
-          || pointInBounds(b2, ba(b1))
-          || pointInBounds(b2, bb(b1))
-          || pointInBounds(b2, bc(b1))
-          || pointInBounds(b2, bd(b1)));
+  const { x: left1, y: top1 } = ba(b1)
+  const { x: right1, y: bottom1 } = bc(b1)
+
+  const { x: left2, y: top2 } = ba(b2)
+  const { x: right2, y: bottom2 } = bc(b2)
+
+  return !(
+    left2 > right1 ||
+    right2 < left1 ||
+    top2 > bottom1 ||
+    bottom2 < top1
+  )
 }

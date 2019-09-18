@@ -1,11 +1,11 @@
-/* @flow -*- mode: flow -*- */
-
 import * as point from "./point";
 
-import type {Point} from "./point";
-import type {Transform} from "./transform";
+import { Point } from "./point";
+import { Transform } from "./transform";
 
-type Matrix = {
+import { Rad, degToRad } from "./util/number"
+
+export interface Matrix {
   a: number; b: number; c: number;
   p: number; q: number; r: number;
   u: number; v: number; w: number;
@@ -21,7 +21,7 @@ export function transform(a: number, b: number, c: number, p: number, q: number,
   };
 }
 
-export const reset = transform(1, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+export const reset = transform(1, 0, 0, 0, 1, 0, 0, 0, 1, 1)
 
 export function translate(x: number, y: number): Matrix {
   return transform(1, 0, x, 0, 1, y, 0, 0, 1, 1);
@@ -31,22 +31,22 @@ export function translatePoint(p: Point): Matrix {
   return transform(1, 0, p.x, 0, 1, p.y, 0, 0, 1, 1);
 }
 
-export function rotate(a: number): Matrix {
+export function rotate(a: Rad): Matrix {
   const c = Math.cos(a), s = Math.sin(a);
   return transform(c, -s, 0, s, c, 0, 0, 0, 1, 1);
 }
 
-export function rotateAround(x: number, y: number, a: number): Matrix {
+export function rotateAround(x: number, y: number, a: Rad): Matrix {
   const r00 = Math.cos(a), r10 = Math.sin(a), r01 = -r10;
-  return transform(r00, r01, x - (r00*x) - (r01*y), r10, r00, y - (r10*x) - (r00*y),
-                   0, 0, 1, 1);
+  return transform(r00, r01, x - (r00 * x) - (r01 * y), r10, r00, y - (r10 * x) - (r00 * y),
+    0, 0, 1, 1);
 }
 
-export function rotateAroundPoint(p: Point, a: number): Matrix {
+export function rotateAroundPoint(p: Point, a: Rad): Matrix {
   const r00 = Math.cos(a), r10 = Math.sin(a), r01 = -r10;
-  return transform(r00, r01, p.x - (r00*p.x) - (r01*p.y), r10, r00,
-                   p.y - (r10*p.x) - (r00*p.y),
-                   0, 0, 1, 1);
+  return transform(r00, r01, p.x - (r00 * p.x) - (r01 * p.y), r10, r00,
+    p.y - (r10 * p.x) - (r00 * p.y),
+    0, 0, 1, 1);
 }
 
 export function scale(x: number, y: number): Matrix {
@@ -78,18 +78,18 @@ export function opacity(o: number): Matrix {
 }
 
 export function compose(t1: Matrix, t2: Matrix): Matrix {
-  return transform((t1.a*t2.a) + (t1.b*t2.p) + (t1.c*t2.u),
-                   (t1.a*t2.b) + (t1.b*t2.q) + (t1.c*t2.v),
-                   (t1.a*t2.c) + (t1.b*t2.r) + (t1.c*t2.w),
+  return transform((t1.a * t2.a) + (t1.b * t2.p) + (t1.c * t2.u),
+    (t1.a * t2.b) + (t1.b * t2.q) + (t1.c * t2.v),
+    (t1.a * t2.c) + (t1.b * t2.r) + (t1.c * t2.w),
 
-                   (t1.p*t2.a) + (t1.q*t2.p) + (t1.r*t2.u),
-                   (t1.p*t2.b) + (t1.q*t2.q) + (t1.r*t2.v),
-                   (t1.p*t2.c) + (t1.q*t2.r) + (t1.r*t2.w),
+    (t1.p * t2.a) + (t1.q * t2.p) + (t1.r * t2.u),
+    (t1.p * t2.b) + (t1.q * t2.q) + (t1.r * t2.v),
+    (t1.p * t2.c) + (t1.q * t2.r) + (t1.r * t2.w),
 
-                   (t1.u*t2.a) + (t1.v*t2.p) + (t1.w*t2.u),
-                   (t1.u*t2.b) + (t1.v*t2.q) + (t1.w*t2.v),
-                   (t1.u*t2.c) + (t1.v*t2.r) + (t1.w*t2.w),
-                   t1.o * t2.o);
+    (t1.u * t2.a) + (t1.v * t2.p) + (t1.w * t2.u),
+    (t1.u * t2.b) + (t1.v * t2.q) + (t1.w * t2.v),
+    (t1.u * t2.c) + (t1.v * t2.r) + (t1.w * t2.w),
+    t1.o * t2.o);
 }
 
 export function composeAll(ts: Array<Matrix>): Matrix {
@@ -97,21 +97,21 @@ export function composeAll(ts: Array<Matrix>): Matrix {
 }
 
 function determinant(t: Matrix): number {
-  return (t.a * (t.q*t.w-t.r*t.v))
-      - (t.b * (t.w*t.p-t.r*t.u))
-      + (t.c * (t.p*t.v-t.q*t.u));
+  return (t.a * (t.q * t.w - t.r * t.v))
+    - (t.b * (t.w * t.p - t.r * t.u))
+    + (t.c * (t.p * t.v - t.q * t.u));
 }
 
 export function mulN(n: number, t: Matrix): Matrix {
-  return transform(n*t.a, n*t.b, n*t.c, n*t.p, n*t.q, n*t.r, n*t.u, n*t.v, n*t.w, t.o);
+  return transform(n * t.a, n * t.b, n * t.c, n * t.p, n * t.q, n * t.r, n * t.u, n * t.v, n * t.w, t.o);
 }
 
 export function inverse(t: Matrix): Matrix {
   const det = 1 / determinant(t);
   const tp = transform(
-    t.q*t.w - t.r*t.v, 0-(t.b*t.w - t.c*t.v), t.b*t.r - t.c*t.q,
-    0-(t.p*t.w - t.r*t.u), t.a*t.w - t.c*t.u, 0-(t.a*t.r - t.c*t.p),
-    t.p*t.v - t.q*t.u, 0-(t.a*t.v - t.b*t.u), t.a*t.q - t.b*t.p,
+    t.q * t.w - t.r * t.v, 0 - (t.b * t.w - t.c * t.v), t.b * t.r - t.c * t.q,
+    0 - (t.p * t.w - t.r * t.u), t.a * t.w - t.c * t.u, 0 - (t.a * t.r - t.c * t.p),
+    t.p * t.v - t.q * t.u, 0 - (t.a * t.v - t.b * t.u), t.a * t.q - t.b * t.p,
     1 / t.o
   );
   return mulN(det, tp);
@@ -119,13 +119,9 @@ export function inverse(t: Matrix): Matrix {
 
 export function transformPoint(t: Matrix, p: Point): Point {
   return {
-    x: t.a*p.x + t.b*p.y + t.c,
-    y: t.p*p.x + t.q*p.y + t.r
+    x: t.a * p.x + t.b * p.y + t.c,
+    y: t.p * p.x + t.q * p.y + t.r
   };
-}
-
-function degToRad(a: number): number {
-  return a * (Math.PI / 180);
 }
 
 export function fromTransform(t: Transform): Matrix {
@@ -174,8 +170,8 @@ export function decompose(t: Matrix) {
   let m12 = row0y;
   let m21 = row1x;
   let m22 = row1y;
-  let sn;
-  let cs;
+  let sn: number;
+  let cs: number;
 
   if (angle) {
     sn = -row0y;

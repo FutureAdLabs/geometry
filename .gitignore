@@ -1,6 +1,11 @@
 .tern-port
 /node_modules/
-/anchor.js
-/matrix.js
-/point.js
-/transform.js
+lib
+exports
+.DS_Store
+.nyc_output
+coverage
+/*.js
+/*.js.flow
+/*.d.ts
+/util
