@@ -46,7 +46,7 @@ export function eqPoint(a: Point, b: Point): boolean {
 //     D---C
 // Given that bounds are always rectangles, the missing point C can be inferred.
 
-interface Bounds {
+export interface Bounds {
   ax: number; ay: number;
   bx: number; by: number;
   dx: number; dy: number;
